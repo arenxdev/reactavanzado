@@ -75,3 +75,21 @@ Pasos para iniciar nuestro proyecto:
 - Paso 8: En los scripts del package.json vamos a añadir el script "build": "webpack", el comando webpack buscara por defecto en la ruta src/index.js; con esto es posible utilizar `npm run build` para compilar el proyecto, en la carpeta dist ahora tendremos un archivo **app.bundle.js** y un **index.html** generado por el plugin de html de webpack.
 - Paso 7: Instalaremos webpack-dev-server con: `npm i webpack-dev-server --save-dev`.
 - Paso 8: Añadiremos un nuevo script llamado dev: "dev": "webpack-dev-server". Esto nos va a compilar toda la aplicación y adicionalmente nos proporcionará una URL para acceder al desarrollo.
+
+### INSTALACIÓN DE REACT Y BABEL
+
+En esta clase vamos a configurar React instalando las dependencias `npm i react react-dom` y Babel para poder transpilar código jsx a JavaScript Vanilla con: `npm i @babel/core @babel/preset-env babel-loader @babel/preset-react --save-dev`.
+
+Para decirle a webpack que utilice nuestro propio template de html debemos agregar lo siguiente:
+
+````javascript
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    })
+  ]
+```
+
+- @babel/preset-env: Permite conseguir que las transformaciones de JavaScriot que se produzcan estén basadas en la última versión de JavaScript aceptada por el ECMASCRIPT COMITE.
+
+Ahora añadiremos en nuestro **webpack.config.js** lo siguiente:
