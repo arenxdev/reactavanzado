@@ -205,3 +205,233 @@ Ahora para desplegar nuestro front haremos lo siguiente:
 
 - En nuestro package.json añadiremos el siguiente script: `"now-build": "npm run build"`.
 - Finalmente en la raíz de nuestro proyecto ejecutaremos **now** para que nos dé una URL en la que se verá nuestro proyecto."
+
+## CREANDO LA INTERFAZ CON STYLED COMPONENTS
+
+### ¿QUÉ ES CSS IN JS?
+
+Antes la forma en la que construíamos nuestras aplicaciones era con HTML-centric:
+
+```html
+<button className='button button-red'>
+  Click here!
+</button>
+```
+
+```javascript
+const button = document.querySelector('button')
+button.addEventListener('click', function () {
+  doSomething()
+})
+```
+
+```css
+.button {
+  border-radius: 4px;
+}
+
+.button-red {
+  background: red;
+  color: #fff;
+}
+```
+
+Luego pasamos a JavaScript-centric:
+
+```javascript
+render () {
+  return (
+    <button
+      className='button button-red'
+      onClick={doSomething}
+    >
+      Click here!
+    <button>
+  )
+}
+```
+```css
+.button {
+  border-radius: 4px;
+}
+
+.button-red {
+  background: red;
+  color: #fff;
+}
+```
+
+Ahora hoy en día pasamos a CSS-in-JS nos permite no solo hacer el jsx si no colocar los estilos en el mismo JavaScript, de la siguiente manera:
+
+```javascript
+const Button = styled.button`
+  border-radius: 4px;
+  ${props => props.accent && `
+    background: red;
+    color: #fff;
+  `}
+
+render () {
+  return (
+    <Button />
+  )
+}
+```
+
+### CREANDO NUESTRO PRIMER COMPONENTE: CATEGORY
+
+Vamos a construir nuestro primer componente el cual será y usaremos styled-components para hacer los estilos de nuestro proyecto. Para esto debemos instalar la dependencia de los style components con npm i styled-components (esta dependencia sí es de producción).
+
+Para que el código del styled-component esté mejor formateado en nuestro editor utilizaremos esta extensión vscode-styled-components.
+
+### CREANDO LISTOFCATEGORIES Y ESTILOS GLOBALES
+
+Para crear nuestros estilos globales con styled-components haremos lo siguiente:
+
+```javascript
+import { createGlobalStyle } from 'styled-components'
+
+export const GlobalStyle = createGlobalStyle`
+  html {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+
+  ul, li, h1, h2, h3, p, button {
+    margin: 0;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    outline: 0;
+  }
+
+  body {
+    background: #fefefe;
+    height: 100vh;
+    margin: 0 auto;
+    max-width: 500px;
+    overscroll-behavior: none;
+    width: 100%;
+  }
+
+  #app {
+    box-shadow: 0 0 10px rgba(0, 0, 0, .05);
+    overflow-x: hidden;
+    min-height: 100vh;
+    padding-bottom: 10px;
+  }
+```
+
+### CREANDO PHOTOCARD Y USANDO REACT-ICON
+
+En esta clase vamos a construir nuestro componente que tendrá las imágenes de nuestro timeline llamado .
+
+Usaremos **react-icons** para darle una propuesta visual mucho más amigable a nuestro proyecto con íconos como Font Awesome, Ionicons, Material Design Icons y mucho más que podremos usar.
+
+`npm i react-icons`
+
+### SVGR: de SVG a componente de ReactJS
+
+En esta clase usaremos <maketext.io> para crear nuestro logo y descargarlo en SVG. Posteriormente a esto utilizaremos SVGOMG para optimizar nuestro logo y tener una mejor versión para usarla en nuestro proyecto.
+
+Luego para convertir nuestro logo svg en un componente de react utilizaremos SVGR.
+
+### CREANDO ANIMACIONES CON KEYFRAMES
+
+Para esto es necesaro importar keyframes de los style componentes de la siguiente manera: `import styled, { keyframes } from 'styled-components'`
+
+El fade in puede ser iplementado así: 
+
+```javascript
+const fadeInKeyframes = keyframes`
+  from {
+    filter: blur(5px);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+`
+
+export const Img = styled.img`
+  animation: 1s ${fadeInKeyframes} ease;
+`
+```
+
+Para hacer reutilizable la animación es necesario importar css
+
+```javascript
+import styled, { keyframes, css } from 'styled-components'
+
+const fadeIn = ({ time = '1s', type = 'ease' } = {}) =>
+  css`animation: ${time} ${fadeInKeyframes} ${type};`
+
+export const Img = styled.img`
+  ${fadeIn({time: '5s'})}
+  box-shadow: 0 10px 14px rgba(0, 0, 0, .2);
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  width: 100%;
+`
+```
+
+### QUÉ SON LOS HOOKS
+
+Los **hooks** son una característica nueva que sólo están disponibles a partir de la versión 16.8.0.
+
+Son **funciones** que nos permiten acceder a **casi todas** las características de React desde componentes funcionales.
+
+#### HOOKS PRINCIPALES
+
+- useState: permite añadir un estado local en el componente.
+- useEffect: nos permite ejecutar una función cada vez que rendericemos nuestro componente.
+- useContext: nos permite acceder al contexto del API para obtener valores que se utilizarán en toda la plicación de forma global.
+
+#### HOOKS AUXILIARES
+
+React es una biblioteca de JavaScript para construir interfaces de usuario. Es declarativo, basado en componentes y puedes escribir una vez y usarlo donde sea.
+
+- useReducer: permite actualizar el estado del componente como se realiza con Redux.
+- useCallback, useMemo, useRef: nos permiten recoger referencias del dom.
+- useImperativeHandle, useLayoutEffect, useDebugValue: permite acceder a valores en desarrollo sin necesidad de poner console.logs
+
+#### CUSTOM HOOKS
+
+Los hooks pueden ser personalizados de forma que la lógica puede ser utilizada en diferentes componentes.
+
+#### VENTAJAS
+
+- Separación de conceptos.
+- 100% retrocompatibles.
+- Mejor transpilación de Babel.
+- Mejor performance.
+
+#### UTILIZANDO USEEFFECT
+
+Este método puede recibir dos parámetros:
+
+1. La función a ejecutar.
+2. Corresponde a las dependencias que necesita el método para ejecutarse.
+
+Si se pasa como segundo parámetro un arreglo vacío, tendrá el mismo comportamiento que el componentDidMount.
+
+```javascript
+  useEffect(function () {
+    window.fetch('https://petgram-afisaacs-server-ptq2tov5n.now.sh/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+  }, [])
+```
