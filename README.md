@@ -435,3 +435,22 @@ Si se pasa como segundo parámetro un arreglo vacío, tendrá el mismo comportam
       .then(data => setCategories(data))
   }, [])
 ```
+
+### USANDO INTERSECTION OBSERVER
+
+Intersection Observer resuelve el problema de saber si algún elemento está visible o no para el usuario. Nos permite hacer un lazy loading muy fácil o cargar contenido multimedia dinámicamente cuando hay más impacto para el usuario, solo deja volar tu imaginación y sácale el jugo con esta clase.
+
+```javascript
+const ref = useRef(null)
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const observer = new window.IntersectionObserver(entries => {
+      const { isIntersecting } = entries[0]
+      console.log(isIntersecting)
+      isIntersecting && setShow(isIntersecting)
+      // observer.disconnect()
+    })
+    observer.observe(ref.current)
+  }, [ref])
+```
