@@ -454,3 +454,40 @@ const ref = useRef(null)
     observer.observe(ref.current)
   }, [ref])
 ```
+
+### USO DE POLYFILL DE INTERSECTION OBSERVER E IMPORTS DINÁMICOS
+
+Debido a que sólo queremos utilizar el polyfill en el **hook** es necesario utilizar un import dinámico.
+
+```javascript
+  useEffect(() => {
+    import('intersection-observer')
+    ...
+```
+
+Para poder user el import dinámico se debe instalar lo siguiente:
+
+npm i @babel/plugin-syntax-dynamic-import -D
+
+En el archivo de de configuración de webpack se agrega lo siguiente:
+
+```javascript
+  options: {
+    plugins: ['@babel/plugin-syntax-dynamic-import'],
+    presets: [
+      '@babel/preset-env',
+      '@babel/preset-react'
+    ]
+  }
+```
+
+Para realizar el **import** dinámico sin que el lint maqque error, es necesario instalar otro parceador al que utiliza por defecto el linter `npm i babel-eslint --save-dev`.
+
+```javascript
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": [
+      "./node_modules/standard/eslintrc.json"
+    ]
+  }
+```
