@@ -35,8 +35,13 @@
     "wepack-cli": "0.0.1-security"
   },
   "dependencies": {
+    "apollo-boost": "^0.4.3",
+    "graphql": "^14.4.2",
+    "graphql-tag": "^2.10.1",
     "intersection-observer": "^0.7.0",
     "react": "^16.8.6",
+    "react-apollo": "^3.0.0",
+    "react-apollo-hooks": "^0.5.0",
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",
     "react-loading-skeleton": "^1.1.2",

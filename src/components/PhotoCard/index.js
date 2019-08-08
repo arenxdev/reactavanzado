@@ -3,10 +3,25 @@ import { Article, ImgWrapper, Img, Button } from './styles'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useNearScreen } from '../../hooks/useNearScreen'
+import Skeleton from 'react-loading-skeleton'
 
-const DEFAULT_IMAGE = 'https://res.cloudinary.com/midudev/image/upload/w_300/q_80/v1560262103/dogs.png'
+export const PhotoCard = ({ id, likes, src, loading }) => {
+  if (loading) {
+    return (
+      <>
+        <Skeleton height={240} />
+        <div style={{ display: 'flex', alignItems: 'center' }} >
+          <div style={{ marginLeft: '2px' }} >
+            <Skeleton circle width={32} height={32} />
+          </div>
+          <div style={{ marginLeft: '10px' }} >
+            <Skeleton height={20} width={100} />
+          </div>
+        </div>
+      </>
+    )
+  }
 
-export const PhotoCard = ({ id, likes = 0, src = DEFAULT_IMAGE }) => {
   const key = `like-${id}`
   const [liked, setLiked] = useLocalStorage(key, false)
   const [show, element] = useNearScreen()
@@ -21,7 +36,6 @@ export const PhotoCard = ({ id, likes = 0, src = DEFAULT_IMAGE }) => {
               <Img src={src} />
             </ImgWrapper>
           </a>
-
           <Button onClick={() => setLiked(!liked)}>
             <Icon size='32px' /> {likes} likes!
           </Button>
