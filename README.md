@@ -524,3 +524,32 @@ Configuraremos nuestro index.js para inicializar nuestro cliente de Apollo con G
           document.getElementById('app')
   )
 ```
+
+## REACH ROUTER
+
+### ¿QUÉ ES REACH ROUTER? CREANDO LA RUTA HOME
+
+Reach Router es una versión simplificada y mejor optimizada de React Router, su creador es Ryan Florence el mismo creador de React Router. Se anunció que los dos paquetes se iban a unir, pero su API se va a parecer más a Reach Router.
+
+En este módulo te vamos a enseñar como usar este increíble paquete para manejar las rutas en nuestra aplicación.
+
+`npm i @reach/router`
+
+En la configuración del webáck es necesario cambiar la forma en como se inicializa con el flag `webpack-dev-server --history-api-fallback`, de esta manera cuando intenta navegar a cualquier ruta el folder que va a utilizar siempre será el **index.html**, esto es porque nuestro enrutado está en el cliente.
+
+En la configuración del webpack también es necesario indicar que la ruta pública de la siguiente manera:
+
+```javascript
+  output: {
+    filename: 'app.bundle.js',
+    publicPath: '/'
+  },
+```
+
+### USANDO LINK PARA EVITAR RECARGAR LA PÁGINA
+
+En esta clase utilizaremos el componente Link para hacer que nuestros enlaces no hagan que la página se recargue y funcione como una Single Page Application. Recuerda siempre que puedas utilizar Link en lugar de a para tener una mejor experiencia de usuario y que no recargue la página.
+
+### ESTILANDO LAS PÁGINAS ACTIVAS
+
+Reach Router nos agrega un atributo aria-current="page" en la página que esté activa en ese momento para que podamos estilarla, agregarle algún tipo de funcionamiento o decirle al usuario en donde se encuentra.

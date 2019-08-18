@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@reach/router'
 import { Article, ImgWrapper, Img } from './styles'
 import { useToogleLikeMutation } from '../../hooks/useToogleLikeMutation'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
@@ -36,11 +37,11 @@ export const PhotoCard = ({ id, likes, src, loading }) => {
     <Article ref={element}>
       {show &&
         <>
-          <a href={`?detail=${id}`} >
+          <Link to={`/detail/${id}`} >
             <ImgWrapper>
               <Img src={src} />
             </ImgWrapper>
-          </a>
+          </Link>
           <FavButton liked={liked} likes={likes} onClick={handleFavClick} />
         </>
       }

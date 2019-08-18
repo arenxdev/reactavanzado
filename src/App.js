@@ -1,26 +1,20 @@
 import React from 'react'
+import { Router } from '@reach/router'
 import { Logo } from './components/Logo'
-import { ListOfCategories } from './components/ListOfCategories'
+import { Navbar } from './components/Navbar'
 import { GlobalStyle } from './styles/GlobalStyle'
-import { ListOfPhotoCards } from './components/ListOfPhotoCards'
-import { PhotoCardDetail } from './components/PhotoCardDetail'
+import { Home } from './pages/Home'
+import { Detail } from './pages/Detail'
 
-export const App = () => {
-  const urlParams = new window.URLSearchParams(window.location.search)
-  const detailId = urlParams.get('detail')
-
-  return (
-    <>
-      <GlobalStyle />
-      <Logo />
-      {
-        detailId
-          ? <PhotoCardDetail id={detailId} />
-          : <>
-            <ListOfCategories />
-            <ListOfPhotoCards categoryId={1} />
-          </>
-      }
-    </>
-  )
-}
+export const App = () => (
+  <>
+    <GlobalStyle />
+    <Logo />
+    <Router>
+      <Home path='/' />
+      <Home path='/pet/:id' />
+      <Detail path='/detail/:id' />
+    </Router>
+    <Navbar />
+  </>
+)
