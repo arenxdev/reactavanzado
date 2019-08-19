@@ -14,7 +14,7 @@ const getPhotos = gql`
   }
 `
 
-export const useGetPhotos = categoryId => {
-  const { loading, data, error } = useQuery(getPhotos, { variables: { categoryId } })
+export const useGetPhotos = autorization => {
+  const { loading, data, error } = useQuery(getPhotos, { variables: { autorization } })
   return { loading, data, error }
 }

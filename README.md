@@ -596,3 +596,38 @@ Para configurar esta Mutation vamos a crear un container llamado RegisterMutatio
     )
   }
 ```
+
+### PERSISTIENDO DATOS EN SESSION STORAGE
+
+De momento nuestra sesión se pierde cada que refrescamos nuestra aplicación, vamos a persistir la sesión utilizando window.sessionStorage dentro de nuestro método activateAuth, quedando:
+
+```javascript
+  activateAuth: token => {
+    setIsAuth(true)
+    window.sessionStorage.setItem('token', token)
+  }
+```
+
+### HACER LIKE COMO USUARIO REGISTRADO
+
+Un JSON Web Token (JWT) es un estándar abierto para crear tokens y asegurar que el envío de datos es confiable y seguro. Van a ser muy útiles para implementar la lógica de los likes pues solamente los usuarios autentificados podrán dar like.
+
+Un JWT se conforma de 3 partes:
+
+- Header: Es un objeto que define qué algoritmo y tipo tiene el token.
+- Payload: La información que almacenamos en el token.
+- Verify Signature: Una encriptación del header más el payload más tu llave secreta.
+
+Para utilizar nuestro JWT necesitamos añadirlo al header authorization de las peticiones HTTP que hagamos con el texto Bearer [token].
+
+Para que el ciente de apollo funcione es necesario añadir el requesto en la definición del cliente de apollo:
+
+```javascript
+  onError: error => {
+    const { networkError } = error
+    if (networkError && networkError.result.code === 'invalid_token') {
+      window.sessionStorage.removeItem('token')
+      window.location.href = '/'
+    }
+  }
+```

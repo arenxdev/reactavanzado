@@ -8,9 +8,9 @@ const REGISTER = gql`
 `
 
 export const useRegisterMutation = (email, password) => {
-  const [mutation, { data, error }] = useMutation(REGISTER)
+  const [mutation, { data, error, loading }] = useMutation(REGISTER)
   const registerUser = (email, password) => {
     mutation({ variables: { input: { email, password } } })
   }
-  return { registerUser, data, error }
+  return { registerUser, data, error, loading }
 }
