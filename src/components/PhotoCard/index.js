@@ -29,7 +29,7 @@ export const PhotoCard = ({ id, likes, src, loading }) => {
   const [show, element] = useNearScreen()
   const toogleLike = useToogleLikeMutation()
   const handleFavClick = () => {
-    !liked && toogleLike({ variables: { input: { id } } })
+    !liked && toogleLike(id)
     setLiked(!liked)
   }
 

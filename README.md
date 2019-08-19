@@ -553,3 +553,46 @@ En esta clase utilizaremos el componente Link para hacer que nuestros enlaces no
 ### ESTILANDO LAS PÁGINAS ACTIVAS
 
 Reach Router nos agrega un atributo aria-current="page" en la página que esté activa en ese momento para que podamos estilarla, agregarle algún tipo de funcionamiento o decirle al usuario en donde se encuentra.
+
+### RUTAS PROTEGIDAS
+
+Con el método render props realizaremos rutas de autenticación para saber si el usuario ha iniciado sesión o no y podremos mostrar contenido dependiendo de las props que le estemos pasando.
+
+## GESTIÓN DEL USUARIO
+
+### MUTACIONES PARA REGISTRO
+
+Context API es una característica que tiene React para poder pasar datos en nuestra aplicación sin necesidad de usar las Props.
+
+Para crear un contexto vamos a importar el método createContext de la librería React. El contexto que creemos no va a dejar de ser un componente de React, por ello debe llevar mayúscula al inicio.
+
+El Context que creemos nos va a proporcionar 2 componentes:
+
+- Provider: componente que debe envolver a nuestra aplicación.
+- Consumer: nos va a permitir acceder a las render props que declaremos en el Provider.
+
+### MUTACIONES PARA REGISTRO
+
+De momento nuestro formulario no está guardando la información de registro en ningún lado, para ello vamos a usar un Mutation de GraphQL para mandarle la información a nuestro backend y que nos regrese un JSON Web Token.
+
+Para configurar esta Mutation vamos a crear un container llamado RegisterMutation.js con el siguiente código:
+
+```javascript
+  import React from ‘react’
+  import { Mutation } from ‘react-apollo’
+  import { gql } from ‘apollo-boost’
+
+  const REGISTER = gql`
+    mutation signup ($input: UserCredentials!) {
+      signup (input: $input)
+    }
+  `
+
+  export const RegisterMutation = ({ children }) => {
+    return (
+      <Mutation mutation={REGISTER}>
+        {children}
+      </Mutation>
+    )
+  }
+```

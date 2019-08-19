@@ -12,6 +12,7 @@ const LIKE_PHOTO = gql`
 `
 
 export const useToogleLikeMutation = id => {
-  const [toogleLike] = useMutation(LIKE_PHOTO)
+  const [mutation] = useMutation(LIKE_PHOTO)
+  const toogleLike = id => mutation({ variables: { input: { id } } })
   return toogleLike
 }
