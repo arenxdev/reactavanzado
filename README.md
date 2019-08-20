@@ -634,3 +634,18 @@ Para que el ciente de apollo funcione es necesario añadir el requesto en la def
 
 ## MEJORES PRACTICAS, SEO Y RECOMENDACIONES
 
+### MIDIENDO EN PERFORMANCE DE NUESTRA APLICACIÓN Y USANDO REACT.MEMO
+
+¡Los componentes sólo harán render si sus props han cambiado! Normalmente, todos los componentes de React en nuestro árbol pasarán por un render cuando se realicen cambios. Con PureComponent y React.memo(), podemos tener solo algunos componentes renderizados.
+
+ejemplo:
+
+```javascript
+// mi-archivo.js
+{/*...*/}
+
+export default Home = React.memo(HomePage)
+```
+
+1. Compilar la aplicación en modo desarrollo utilizando `./node_modules/.bin/webpack --mode "development"`, así sabrá que se debe compilar en modo desarrollo; el resultado lo dejará en la carpeta dist.
+2. Con **serve** podemos servir la compilación utilizando `npx serve dist -s` el parámetro s indica que es una **single page application**
