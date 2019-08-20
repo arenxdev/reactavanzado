@@ -631,3 +631,6 @@ Para que el ciente de apollo funcione es necesario añadir el requesto en la def
     }
   }
 ```
+
+## MEJORES PRACTICAS, SEO Y RECOMENDACIONES
+
