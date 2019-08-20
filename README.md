@@ -648,4 +648,5 @@ export default Home = React.memo(HomePage)
 ```
 
 1. Compilar la aplicación en modo desarrollo utilizando `./node_modules/.bin/webpack --mode "development"`, así sabrá que se debe compilar en modo desarrollo; el resultado lo dejará en la carpeta dist.
-2. Con **serve** podemos servir la compilación utilizando `npx serve dist -s` el parámetro s indica que es una **single page application**
+2. Con **serve** podemos servir la compilación utilizando `npx serve dist -s` el parámetro s indica que es una **single page application**.
+3. En el navegador vamos a ver la misma aplicación pero con un pequeño cambio: 
