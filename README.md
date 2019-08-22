@@ -634,6 +634,34 @@ Para que el ciente de apollo funcione es necesario añadir el requesto en la def
 
 ## MEJORES PRACTICAS, SEO Y RECOMENDACIONES
 
+### REACT HELMET
+
+Las SPA no necesariamente tienen mal SEO como se hace pensar. React Helmet nos va a ayudar a manejar el SEO de nuestra aplicación para poder cambiar el texto del título
+
+`npm i react-helmet`
+
+```javascript
+  import React from 'react'
+  import { Helmet } from 'react-helmet'
+  import { Div, Title, SubTitle } from './style'
+
+  export const Layout = ({ children, title, subtitle }) => {
+    return (
+      <>
+        <Helmet>
+          {title && <title>{title} | Petgram</title>}
+          {subtitle && <meta name='description' content={subtitle} />}
+        </Helmet>
+        <Div>
+          {title && <Title>{title}</Title>}
+          {subtitle && <SubTitle>{subtitle}</SubTitle>}
+          {children}
+        </Div>
+      </>
+    )
+  }
+```
+
 ### MIDIENDO EN PERFORMANCE DE NUESTRA APLICACIÓN Y USANDO REACT.MEMO
 
 ¡Los componentes sólo harán render si sus props han cambiado! Normalmente, todos los componentes de React en nuestro árbol pasarán por un render cuando se realicen cambios. Con PureComponent y React.memo(), podemos tener solo algunos componentes renderizados.
@@ -641,12 +669,184 @@ Para que el ciente de apollo funcione es necesario añadir el requesto en la def
 ejemplo:
 
 ```javascript
-// mi-archivo.js
-{/*...*/}
+import React from 'react'
+import { ListOfCategories } from '../components/ListOfCategories'
+import { ListOfPhotoCards } from '../components/ListOfPhotoCards'
 
-export default Home = React.memo(HomePage)
+const HomePage = ({ id }) => (
+  <>
+    <ListOfCategories />
+    <ListOfPhotoCards categoryId={id} />
+  </>
+)
+
+export const Home = React.memo(HomePage, (prevProps, props) => prevProps.id === props.id)
+
 ```
+
+La función que se pasa a React Memo sirve para indicarle que realice el renderizado en el caso de que las id cambien.
 
 1. Compilar la aplicación en modo desarrollo utilizando `./node_modules/.bin/webpack --mode "development"`, así sabrá que se debe compilar en modo desarrollo; el resultado lo dejará en la carpeta dist.
 2. Con **serve** podemos servir la compilación utilizando `npx serve dist -s` el parámetro s indica que es una **single page application**.
-3. En el navegador vamos a ver la misma aplicación pero con un pequeño cambio: 
+3. En el navegador vamos a ver la misma aplicación pero con un pequeño cambio.
+4. Utilizando los devtools de React es posible hechar un vistazo a el performance y los componentes que se están volviendo a renderizar al grabar cierta acción.
+
+### REACT.LAZY() Y COMPONENTE SUSPENSE
+
+Suspense es un componente de React que nos va a permitir suspender algo cuando está en modo lazy(); y lazy(). El cual nos va a permitir importar un componente que no será cargado hasta que este sea llamado. De esta forma mejoraremos el tiempo de carga de nuestra aplicación enormemente.
+
+```javascript
+  import React, { useContext, Suspense } from 'react'
+  import { Router, Redirect } from '@reach/router'
+  import { Context } from './Context'
+  import { Logo } from './components/Logo'
+  import { Navbar } from './components/Navbar'
+  import { GlobalStyle } from './styles/GlobalStyle'
+
+  const NotFound = React.lazy(() => import('./pages/NotFound'))
+  const Favs = React.lazy(() => import('./pages/Favs'))
+  const Home = React.lazy(() => import('./pages/Home'))
+  const Detail = React.lazy(() => import('./pages/Detail'))
+  const User = React.lazy(() => import('./pages/User'))
+  const NotRegisteredUser = React.lazy(() => import('./pages/NotRegisteredUser'))
+
+  export const App = () => {
+    const { isAuth } = useContext(Context)
+
+    return (
+      <Suspense fallback={<div />}>
+        <GlobalStyle />
+        <Logo />
+        <Router>
+          <NotFound default />
+          <Home path='/' />
+          <Home path='/pet/:id' />
+          <Detail path='/detail/:id' />
+          {!isAuth && <NotRegisteredUser path='/login' />}
+          {!isAuth && <Redirect noThrow from='/favs' to='/login' />}
+          {!isAuth && <Redirect noThrow from='/user' to='/login' />}
+          {isAuth && <Redirect noThrow from='/login' to='/' />}
+          <Favs path='/favs' />
+          <User path='/user' />
+        </Router>
+        <Navbar />
+      </Suspense>
+    )
+  }
+```
+
+### USANDO PROPTYPES PARA VALIDAR LAS PROPS
+
+Las PropTypes serán un validador del tipo de datos que estamos recibiendo como props en nuestros componentes, el cual nos permitirá a que sea exclusivamente ese tipo de datos.
+`npm i prop-types`
+
+```javascript
+  import React from 'react'
+  import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
+  import { Button } from './style'
+  import PropTypes from 'prop-types'
+
+  export const FavButton = ({ liked, likes, onClick }) => {
+    const Icon = liked ? MdFavorite : MdFavoriteBorder
+    return (
+      <Button onClick={onClick}>
+        <Icon size='32px' /> {likes} likes!
+      </Button>
+    )
+  }
+
+  FavButton.propTypes = {
+    liked: PropTypes.bool.isRequired,
+    likes: PropTypes.number.isRequired,
+    onClick: PropTypes.func.isRequired
+  }
+```
+
+Los proptypes sólo se ven en desarrollo, no e producción.
+
+### PWA: GENERANDO EL MANIFEST
+
+Usaremos webpack-pwa-manifest para crear nuestro manifest.json y que nuestra aplicación pueda ser compatible con todos los requerimientos de una PWA.
+
+1. Correr script para ejecutar los estáticos en modo desarrollo ``npm run serve:dev
+2. En las heramientas de desarrolo de Chrome hay una pestaña llamada **audits**.
+
+Al correr el audit para PWA se valida que falta para ser una PWA
+
+- Arreglo en caso de que el navegador no ejecute JavaScript.
+
+  Esto se arregla con la etiqueta noscript:
+
+  ```html
+  <noscript>
+    <h3>Está app necesita JavaScript para funcionar</h3>
+  </noscript>
+  ```
+
+- Falta de Manifest:
+
+  Para esto vamos a instalar un plugin de webpack para el manifest `npm i webpack-pwa-manifest`
+
+  ```javascript
+  const WebpackPwaManifestPlugin = require('webpack-pwa-manifest')
+  const path = require('path')
+
+  new WebpackPwaManifestPlugin({
+    name: 'Petgram - Tu app de fotos de mascotas',
+    short_name: 'Petgram 🐶',
+    description: 'Con Petgram puedes añadir fotos de animales domésticos muy fácilmente',
+    background_color: '#fff',
+    theme_color: '#b1a',
+    icons: [
+      {
+        src: path.resolve('src/assets/icon.png'),
+        sizes: [96, 128, 192, 256, 384, 512]
+      }
+    ]
+  })
+  ```
+
+  Es importante guardar el icono en la ruta especificada, webpack se encargará de generar los tamaños especificados
+
+- Soporte offline:
+
+  Utilizaremos workbox-webpack-plugin para agregar soporte online a nuestro proyecto, así como lo hacen Twitter e Instagram cuando entramos desde el navegador.
+
+  `npm i workbox-webpack-plugin -D`
+
+  ```javascript
+    const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
+
+    new WorkboxWebpackPlugin.GenerateSW({
+      runtimeCaching: [
+        {
+          urlPattern: new RegExp('https://(res.cloudinary.com|images.unsplash.com)'),
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'images'
+          }
+        },
+        {
+          urlPattern: new RegExp('https://petgram-afisaacs-server-ptq2tov5n.now.sh/'),
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'api'
+          }
+        }
+      ]
+    })
+  ```
+
+  Luego de realizar esto es necesario hacer un proceso manual, no como el manifest que se inyecta automáticamente, por lo que se debe agregar lo siguiente al index.hmtl:
+
+  ```html
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => console.log('SW - Registrado'))
+        .catch(error => console.log('SW error', error))
+      })
+    }
+  </script>
+  ```

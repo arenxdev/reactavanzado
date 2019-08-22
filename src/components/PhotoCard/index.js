@@ -5,6 +5,7 @@ import { useToogleLikeMutation } from '../../hooks/useToogleLikeMutation'
 import { useNearScreen } from '../../hooks/useNearScreen'
 import Skeleton from 'react-loading-skeleton'
 import { FavButton } from '../FavButton'
+import PropTypes from 'prop-types'
 
 export const PhotoCard = ({ id, liked, likes, src, loading }) => {
   if (loading) {
@@ -41,4 +42,20 @@ export const PhotoCard = ({ id, liked, likes, src, loading }) => {
       }
     </Article>
   )
+}
+
+PhotoCard.propTypes = {
+  id: PropTypes.string.isRequired,
+  liked: PropTypes.bool.isRequired,
+  likes: function (props, propName, componentName) {
+    const propValue = props[propName]
+    if (propValue === undefined) {
+      return new Error(`Value must be defined`)
+    }
+    if (propValue < 0) {
+      return new Error(`Value must be greater than 0`)
+    }
+  },
+  src: PropTypes.string.isRequired,
+  loading: PropTypes.bool
 }
