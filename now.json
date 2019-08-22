@@ -10,10 +10,10 @@
       "src": "(.*).json", "dest": "/$1.json"
     },
     {
-      "src": "/.*", "dest":"/index.html"
+      "src": "(.*).png", "dest": "/$1.png"
     },
     {
-      "src": "(.*).png", "dest": "/$1.png"
+      "src": "/.*", "dest":"/index.html"
     }
   ]
 }
